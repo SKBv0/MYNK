@@ -57,7 +57,7 @@ scraper = "0.24"
 encoding_rs = "0.8"
 sha2 = "0.10"
 rusqlite = { version = "0.37", features = ["bundled"] }
-dirs = "6"
+dirs = "7"
 webbrowser = "1.0"
 # Agent access: the `mynk-mcp` binary speaks MCP over stdio. `server` + `macros` give the tool
 # router, `transport-io` the stdin/stdout transport.
