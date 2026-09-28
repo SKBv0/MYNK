@@ -1,0 +1,4 @@
+# Built by `npm run build:mcp` (scripts/copy-mcp-sidecar.mjs) before every bundle, one file per
+# target triple. Build output, not source.
+*
+!.gitignore

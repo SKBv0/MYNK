@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<assembly xmlns="urn:schemas-microsoft-com:asm.v1" manifestVersion="1.0">
+  <!-- Test binaries only. Linking a real Tauri `App` imports comctl32 v6 entry points
+       (TaskDialogIndirect, SetWindowSubclass); without this dependency Windows binds the
+       v5 comctl32 and the process dies at startup with STATUS_ENTRYPOINT_NOT_FOUND. -->
+  <dependency>
+    <dependentAssembly>
+      <assemblyIdentity
+        type="win32"
+        name="Microsoft.Windows.Common-Controls"
+        version="6.0.0.0"
+        processorArchitecture="*"
+        publicKeyToken="6595b64144ccf1df"
+        language="*"
+      />
+    </dependentAssembly>
+  </dependency>
+</assembly>

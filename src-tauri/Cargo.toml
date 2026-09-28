@@ -1,0 +1,94 @@
+[package]
+name = "mynk"
+version = "0.1.0"
+description = "Bookmark manager that summarizes, categorizes and tags your saved pages with a local or cloud AI model."
+authors = ["SKBv0"]
+license = "MIT"
+repository = "https://github.com/SKBv0/mynk"
+homepage = "https://github.com/SKBv0/mynk"
+edition = "2021"
+rust-version = "1.97"
+publish = false
+# Two binaries live here (the app and the `mynk-mcp` sidecar); this picks which one is packaged.
+default-run = "mynk"
+
+[lib]
+name = "app_lib"
+# Desktop only: the binary and the integration tests link the rlib. The mobile template's
+# staticlib/cdylib outputs cost ~2 GB of unused artifacts per profile.
+crate-type = ["rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2.6", features = [] }
+
+[dependencies]
+serde_json = "1.0"
+serde = { version = "1.0", features = ["derive"] }
+log = "0.4"
+thiserror = "2"
+tauri = { version = "2.11.5", features = ["protocol-asset"] }
+tauri-plugin-log = "2.9"
+tauri-plugin-store = "2"
+# Real OS credential stores. Without these features keyring 3 silently falls back to an
+# in-memory mock store and the OpenRouter key is lost on restart.
+keyring = { version = "3", features = [
+  "windows-native",
+  "apple-native",
+  "sync-secret-service",
+  "crypto-rust",
+  "vendored",
+] }
+reqwest = { version = "0.13", default-features = false, features = [
+  "json",
+  "rustls",
+  "gzip",
+  "brotli",
+  "http2",
+  "system-proxy",
+] }
+url = "2"
+futures = "0.3"
+# Desktop-only. Without it, two windows would race library.json (last-writer-wins); this
+# focuses the running window instead of starting a second writer.
+tauri-plugin-single-instance = "2"
+tokio = { version = "1", features = ["rt", "macros", "time", "sync", "process", "net", "fs"] }
+tokio-util = "0.7"
+scraper = "0.24"
+encoding_rs = "0.8"
+sha2 = "0.10"
+rusqlite = { version = "0.37", features = ["bundled"] }
+dirs = "6"
+webbrowser = "1.0"
+# Agent access: the `mynk-mcp` binary speaks MCP over stdio. `server` + `macros` give the tool
+# router, `transport-io` the stdin/stdout transport.
+rmcp = { version = "3.3", features = ["server", "macros", "transport-io"] }
+# Automatic updates: signed `latest.json` check, minisign verify, NSIS install; `process` only
+# supplies the relaunch. Pinned to 2.x; 3.0.0-alpha doesn't match Tauri 2.11.
+tauri-plugin-updater = "2.11"
+tauri-plugin-process = "2.3"
+
+[dev-dependencies]
+# `client` lets the integration tests drive the server through a real MCP client.
+rmcp = { version = "3.3", features = ["client"] }
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "net", "io-util", "time", "sync"] }
+# `test` enables tauri's MockRuntime so integration tests can build a real `App` / `AppHandle`.
+tauri = { version = "2.11.5", features = ["test"] }
+tempfile = "3"
+
+[[bin]]
+name = "mynk-mcp"
+path = "src/bin/mynk-mcp.rs"
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = "s"
+strip = true
+panic = "abort"
+
+[lints.rust]
+unsafe_code = "forbid"
+
+[lints.clippy]
+all = { level = "warn", priority = -1 }
+unwrap_used = "warn"

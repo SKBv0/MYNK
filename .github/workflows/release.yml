@@ -1,0 +1,97 @@
+name: Release
+
+# Pushing a version tag builds and signs the updater artifacts, then opens a *draft* release.
+# An update reaches installed copies only after that draft is published by hand.
+on:
+  push:
+    tags: ['v*']
+
+# The only workflow that may write to the repository (CI stays read-only).
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # The same gates as CI (types, lint, format, tests, audit, licenses); nothing is built or
+  # uploaded unless they pass.
+  checks:
+    uses: ./.github/workflows/ci.yml
+    permissions:
+      contents: read
+
+  windows:
+    needs: checks
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - uses: dtolnay/rust-toolchain@6c977a6ca4077a0ceb28ffbe03f59d46e9ac8772 # master 2026-08-05
+        with:
+          toolchain: 1.97.1
+      # tauri-action runs its own cargo, so the path-remapping flags go into the job environment.
+      # No build cache: an installed artifact must come from a compile this tag started.
+      - run: node scripts/build-env.mjs --github-env
+      # A missing key or a tag that disagrees with the manifests only shows up after the build,
+      # in a draft release that cannot be updated: both are cheaper to catch here.
+      - name: Check signing key and tag
+        shell: bash
+        env:
+          SIGNING_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAG: ${{ github.ref_name }}
+        run: |
+          if [ -z "$SIGNING_KEY" ]; then
+            echo "::error::TAURI_SIGNING_PRIVATE_KEY is empty; installed copies would refuse the update."
+            exit 1
+          fi
+          expected="${TAG#v}"
+          pkg=$(node -p "require('./package.json').version")
+          conf=$(node -p "require('./src-tauri/tauri.conf.json').version")
+          cargo=$(node -p "/^version = \"(.+)\"/m.exec(require('fs').readFileSync('src-tauri/Cargo.toml','utf8'))[1]")
+          for pair in "package.json:$pkg" "tauri.conf.json:$conf" "Cargo.toml:$cargo"; do
+            if [ "${pair#*:}" != "$expected" ]; then
+              echo "::error::${pair%%:*} says ${pair#*:}, tag $TAG expects $expected."
+              exit 1
+            fi
+          done
+
+      - run: npm ci
+      - uses: tauri-apps/tauri-action@84b9d35b5fc46c1e45415bdb6144030364f7ebc5 # v0.6.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # Without this key the build produces no .sig, and installed copies refuse the update.
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          # Leave this secret unset for a key without a password: GitHub does not store empty
+          # secrets, and an unset one expands to the empty string the CLI expects.
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+        with:
+          tagName: ${{ github.ref_name }}
+          releaseName: MYNK ${{ github.ref_name }}
+          releaseBody: |
+            Windows 10/11 installer. It installs for the current user and needs no administrator rights.
+
+            The installer is not code-signed, so Windows SmartScreen shows a warning. Click **More info**, then **Run anyway**.
+
+            The changes are listed in [CHANGELOG.md](https://github.com/SKBv0/mynk/blob/main/CHANGELOG.md).
+          releaseDraft: true
+          prerelease: false
+          includeUpdaterJson: true
+
+      # This runs after the draft has been uploaded, so it cannot stop the upload. A failure here
+      # means the draft must be deleted instead of published, and the job fails to say so.
+      - name: Check artifacts for build-machine paths
+        run: >
+          node scripts/check-artifact-paths.mjs
+          src-tauri/target/release/mynk
+          src-tauri/target/release/mynk-mcp
+          src-tauri/target/release/bundle
+          src-tauri/binaries
+          dist
