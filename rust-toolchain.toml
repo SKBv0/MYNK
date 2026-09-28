@@ -1,0 +1,6 @@
+# Pinned so a new stable release cannot break `clippy -D warnings` on an unrelated commit.
+# Bump deliberately, together with the `toolchain:` pins in both workflows under .github/workflows.
+[toolchain]
+channel = "1.97.1"
+components = ["clippy", "rustfmt"]
+profile = "minimal"

@@ -1,0 +1,97 @@
+[
+  {
+    "input": "\u0130STANBUL \u0131\u015f\u0131k",
+    "normalized": "istanbul isik",
+    "tokens": ["istanbul", "isik"]
+  },
+  {
+    "input": "AI and API",
+    "normalized": "ai and api",
+    "tokens": ["ai", "and", "api"]
+  },
+  {
+    "input": "Yaz\u0131l\u0131m Geli\u015ftirme",
+    "normalized": "yazilim gelistirme",
+    "tokens": ["yazilim", "gelistirme"]
+  },
+  {
+    "input": "Caf\u00e9 \u00d1o\u00f1o",
+    "normalized": "cafe nono",
+    "tokens": ["cafe", "nono"]
+  },
+  {
+    "input": "cafe\u0301",
+    "normalized": "cafe",
+    "tokens": ["cafe"]
+  },
+  {
+    "input": "Bucure\u0219ti, Timi\u0219oara",
+    "normalized": "bucuresti, timisoara",
+    "tokens": ["bucuresti", "timisoara"]
+  },
+  {
+    "input": "\u0419\u043e\u0433\u0430 \u0438 \u0451\u043b\u043a\u0430",
+    "normalized": "\u0438\u043e\u0433\u0430 \u0438 \u0435\u043b\u043a\u0430",
+    "tokens": ["\u0438\u043e\u0433\u0430", "\u0438", "\u0435\u043b\u043a\u0430"]
+  },
+  {
+    "input": "\u0386\u03bb\u03c6\u03b1 \u039f\u0394\u039f\u03a3",
+    "normalized": "\u03b1\u03bb\u03c6\u03b1 \u03bf\u03b4\u03bf\u03c2",
+    "tokens": ["\u03b1\u03bb\u03c6\u03b1", "\u03bf\u03b4\u03bf\u03c2"]
+  },
+  {
+    "input": "Ti\u1ebfng Vi\u1ec7t",
+    "normalized": "tieng viet",
+    "tokens": ["tieng", "viet"]
+  },
+  {
+    "input": "\u0141\u00f3d\u017a \u00c6r\u00f8",
+    "normalized": "\u0142odz \u00e6r\u00f8",
+    "tokens": ["\u0142odz", "\u00e6r\u00f8"]
+  },
+  {
+    "input": "\ud55c\uad6d\uc5b4",
+    "normalized": "\u1112\u1161\u11ab\u1100\u116e\u11a8\u110b\u1165",
+    "tokens": ["\u1112\u1161\u11ab\u1100\u116e\u11a8\u110b\u1165"]
+  },
+  {
+    "input": "\u0939\u093f\u0928\u094d\u0926\u0940",
+    "normalized": "\u0939\u0928\u0926",
+    "tokens": ["\u0939\u0928\u0926"]
+  },
+  {
+    "input": "\u24b6bc \u24d0",
+    "normalized": "\u24d0bc \u24d0",
+    "tokens": ["bc"]
+  },
+  {
+    "input": "\u212b \u212a",
+    "normalized": "a k",
+    "tokens": ["a", "k"]
+  },
+  {
+    "input": "\uf900",
+    "normalized": "\u8c48",
+    "tokens": ["\u8c48"]
+  },
+  {
+    "input": "React-Native, v18.2 (\u0130yi)",
+    "normalized": "react-native, v18.2 (iyi)",
+    "tokens": ["react", "native", "v18", "2", "iyi"]
+  },
+  {
+    "input": "\ud83d\udc4d rust",
+    "normalized": "\ud83d\udc4d rust",
+    "tokens": ["rust"]
+  },
+  {
+    "input": "  --  ",
+    "normalized": "  --  ",
+    "tokens": []
+  },
+  {
+    "input": "",
+    "normalized": "",
+    "tokens": []
+  }
+]

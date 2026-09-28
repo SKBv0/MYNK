@@ -1,0 +1,357 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* MYNK design tokens; --accent-* values are set at runtime by hooks/useThemeVars.ts.
+   Contrast ratios are against --surface-1 of the same theme unless the line says otherwise. */
+:root,
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0b0b0d;
+  --surface-1: #111114;
+  --surface-2: #17171b;
+  --surface-3: #1e1e23;
+  --surface-hover: rgb(255 255 255 / 0.05);
+  --surface-active: rgb(255 255 255 / 0.09);
+  --surface-overlay: rgb(0 0 0 / 0.72);
+  --surface-media: rgb(0 0 0 / 0.62);
+  --surface-media-hover: rgb(0 0 0 / 0.8);
+
+  --border-subtle: rgb(255 255 255 / 0.06);
+  --border-default: rgb(255 255 255 / 0.1);
+  --border-strong: rgb(255 255 255 / 0.18);
+
+  --text-primary: #f1f5f9; /* 17.2:1 */
+  --text-secondary: #cbd5e1; /* 12.7:1 */
+  --text-muted: #94a3b8; /* 7.3:1 */
+  --text-disabled: #64748b; /* 4.0:1, disabled / decorative only, never body text */
+  --text-on-media: #ffffff;
+
+  --accent: #facc15;
+  --accent-rgb: 250 204 21;
+  --accent-contrast: #0b0b0d;
+  --accent-text: #facc15;
+  --accent-text-rgb: 250 204 21;
+  --accent-soft: rgb(var(--accent-rgb) / 0.12);
+  /* Focus rings track --accent-text, not --accent: the raw accent drops to 1.4:1 in light. */
+  --accent-ring: rgb(var(--accent-text-rgb) / 0.45);
+
+  /* rgb triplets; Tailwind adds the alpha (text-danger, bg-danger/10, …) */
+  --success-rgb: 52 211 153;
+  --warning-rgb: 251 191 36;
+  --danger-rgb: 251 113 133;
+  --danger-strong: #e11d48; /* destructive button fill */
+  --danger-strong-hover: #be123c;
+  --danger-strong-contrast: #ffffff; /* on --danger-strong 4.7:1, on its hover 6.3:1 */
+  --info-rgb: 56 189 248;
+
+  /* Graph marks; ≥ 3:1 against --surface-1 */
+  --viz-1: #60a5fa;
+  --viz-2: #f472b6;
+  --viz-3: #fbbf24;
+  --viz-4: #34d399;
+  --viz-5: #a78bfa;
+  --viz-6: #f87171;
+  --viz-7: #22d3ee;
+  --viz-8: #a3e635;
+
+  --shadow-sm: 0 1px 2px rgb(0 0 0 / 0.3);
+  --shadow-md: 0 4px 12px rgb(0 0 0 / 0.35);
+  --shadow-lg: 0 16px 40px rgb(0 0 0 / 0.45);
+}
+
+[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #f6f6f8;
+  --surface-1: #ffffff;
+  --surface-2: #f1f1f4;
+  --surface-3: #e6e6eb;
+  --surface-hover: rgb(15 23 42 / 0.05);
+  --surface-active: rgb(15 23 42 / 0.09);
+  --surface-overlay: rgb(15 23 42 / 0.45);
+  --surface-media: rgb(15 23 42 / 0.62);
+  --surface-media-hover: rgb(15 23 42 / 0.8);
+
+  --border-subtle: rgb(15 23 42 / 0.07);
+  --border-default: rgb(15 23 42 / 0.12);
+  --border-strong: rgb(15 23 42 / 0.22);
+
+  --text-primary: #0f172a; /* 17.9:1 */
+  --text-secondary: #334155; /* 10.4:1 */
+  --text-muted: #52607a; /* 6.3:1 */
+  --text-disabled: #94a3b8; /* 2.5:1, disabled / decorative only, never body text */
+
+  --success-rgb: 6 95 70; /* 7.7:1 on --surface-1, 6.2:1 on --surface-3 */
+  --warning-rgb: 146 64 14; /* 7.1:1 on --surface-1, 5.7:1 on --surface-3 */
+  --danger-rgb: 190 18 60;
+  --danger-strong: #e11d48;
+  --danger-strong-hover: #be123c;
+  --danger-strong-contrast: #ffffff;
+  --info-rgb: 3 105 161;
+
+  --viz-1: #2563eb;
+  --viz-2: #db2777;
+  --viz-3: #b45309;
+  --viz-4: #047857;
+  --viz-5: #7c3aed;
+  --viz-6: #dc2626;
+  --viz-7: #0e7490;
+  --viz-8: #4d7c0f;
+
+  --shadow-sm: 0 1px 2px rgb(15 23 42 / 0.08);
+  --shadow-md: 0 4px 12px rgb(15 23 42 / 0.1);
+  --shadow-lg: 0 16px 40px rgb(15 23 42 / 0.16);
+}
+
+:root {
+  /* Hand-written CSS only; components use Tailwind's scale (same 4px grid). */
+  --space-3: 12px;
+  --space-4: 16px;
+
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 16px;
+  --radius-full: 9999px;
+
+  --font-display: 'Syne Variable', 'Segoe UI', system-ui, sans-serif;
+  --font-body: 'DM Sans Variable', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  --font-mono: ui-monospace, 'Cascadia Code', 'Consolas', monospace;
+  --text-xs: 11px;
+  --text-sm: 12px;
+  --text-base: 14px;
+  --text-md: 16px;
+  --text-lg: 20px;
+  --text-xl: 28px;
+  --tracking-overline: 0.08em;
+
+  --dur-fast: 120ms;
+  --dur-base: 180ms;
+  --dur-slow: 280ms;
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+
+  --z-header: 20;
+  --z-sidebar: 30;
+  --z-drawer: 40;
+  --z-dock: 50;
+  --z-overlay: 60;
+  --z-modal: 70;
+  --z-toast: 90;
+  --z-tooltip: 95;
+  --z-titlebar: 100;
+
+  --control-h-sm: 32px;
+  --control-h-md: 36px;
+  --control-h-lg: 44px;
+
+  --titlebar-h: 32px;
+  --sidebar-w: 240px;
+  --sidebar-w-collapsed: 64px;
+  --inspector-w: 420px;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  line-height: 1.55;
+  background-color: var(--bg);
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  /* Each region scrolls itself; the window never does. */
+  overflow: hidden;
+}
+
+::selection {
+  background: rgb(var(--accent-rgb) / 0.35);
+  color: var(--text-primary);
+}
+
+/* Chrome is not selectable; content text is. */
+button,
+[role='button'],
+[role='tab'],
+[role='radio'],
+[role='menuitem'],
+[role='option'],
+[data-chrome] {
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+:where(a, button, input, textarea, select, summary, [tabindex]):focus-visible {
+  outline: 2px solid var(--accent-text);
+  outline-offset: 2px;
+}
+
+/* Inputs draw their own ring on the wrapping field; programmatic focus targets (panels,
+   headings, SVG nodes) need no outline at all. */
+:where(.field-control, [data-focus-container], [data-own-focus-ring]):focus-visible {
+  outline: none;
+}
+
+/* WebView2 can paint the native select popup with a light OS background even when
+   the page uses color-scheme: dark. Keep option text and its surface paired. */
+select option {
+  background-color: var(--surface-2);
+  color: var(--text-primary);
+}
+
+select option:disabled {
+  color: var(--text-muted);
+}
+
+/* Search fields carry their own clear button, so the native one is hidden. */
+input[type='search']::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-strong) transparent;
+}
+
+@layer components {
+  .text-overline {
+    font-size: var(--text-xs);
+    line-height: 16px;
+    font-weight: 600;
+    letter-spacing: var(--tracking-overline);
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .prose-mynk {
+    color: var(--text-secondary);
+    font-size: var(--text-base);
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+  .prose-mynk > * + * {
+    margin-top: 0.85em;
+  }
+  .prose-mynk h1,
+  .prose-mynk h2,
+  .prose-mynk h3 {
+    color: var(--text-primary);
+    font-weight: 600;
+    line-height: 1.3;
+    margin-top: 1.4em;
+  }
+  .prose-mynk > :first-child {
+    margin-top: 0;
+  }
+  .prose-mynk h1 {
+    font-family: var(--font-display);
+    font-size: var(--text-lg);
+  }
+  .prose-mynk h2 {
+    font-size: var(--text-md);
+  }
+  .prose-mynk h3 {
+    font-size: var(--text-base);
+  }
+  .prose-mynk strong {
+    color: var(--text-primary);
+    font-weight: 600;
+  }
+  .prose-mynk ul,
+  .prose-mynk ol {
+    padding-left: 1.4em;
+  }
+  .prose-mynk ul {
+    list-style: disc;
+  }
+  .prose-mynk ol {
+    list-style: decimal;
+  }
+  .prose-mynk li + li {
+    margin-top: 0.35em;
+  }
+  .prose-mynk li::marker {
+    color: var(--accent-text);
+  }
+  .prose-mynk a {
+    color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+  .prose-mynk code {
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    padding: 1px 5px;
+    border-radius: var(--radius-sm);
+    background: var(--surface-3);
+    color: var(--text-primary);
+  }
+  .prose-mynk pre {
+    background: var(--surface-1);
+    border: 1px solid var(--border-subtle);
+    border-radius: var(--radius-md);
+    padding: var(--space-3) var(--space-4);
+    overflow-x: auto;
+    font-size: var(--text-sm);
+  }
+  .prose-mynk pre code {
+    padding: 0;
+    background: none;
+  }
+
+  /* A thin light travelling around the card edge while the AI analyses it. The card's own
+     border goes transparent; the ring is a masked 1px conic gradient inside the padding box. */
+  .analyzing-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: conic-gradient(
+      from var(--mynk-ring-angle),
+      rgb(var(--accent-text-rgb) / 0.25) 0deg,
+      var(--accent-text) 50deg,
+      rgb(var(--accent-text-rgb) / 0.25) 100deg 360deg
+    );
+    -webkit-mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    mask:
+      linear-gradient(#000 0 0) content-box,
+      linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    animation: mynk-ring-spin 2.4s linear infinite;
+    pointer-events: none;
+    z-index: 1;
+  }
+}
+
+@property --mynk-ring-angle {
+  syntax: '<angle>';
+  inherits: false;
+  initial-value: 0deg;
+}
+
+@keyframes mynk-ring-spin {
+  to {
+    --mynk-ring-angle: 360deg;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

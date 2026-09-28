@@ -1,0 +1,37 @@
+# Dependencies and build output
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+.eslintcache
+.vite/
+video-work/
+scripts/video/
+
+# Rust / Tauri
+src-tauri/target/
+src-tauri/gen/
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# Environment and secrets
+.env
+.env.*
+*.local
+*.key
+*.pem
+*.p12
+*.pfx
+
+# Editors
+.vscode/
+.idea/
+*.sw?
+
+# OS
+.DS_Store
+Thumbs.db
+Desktop.ini
